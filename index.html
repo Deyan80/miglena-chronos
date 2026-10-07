@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="bg" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Миглена Иванова — Хронос | Time, Sea & Grace</title>
+<meta name="description" content="3D часовник в цветно пространство, през което плуват мигове от света на Миглена Иванова. A 3D clock drifting through colour, where moments from Miglena Ivanova's world float by.">
+<!-- Проект / Project: miglena-chronos  →  https://YOUR-GITHUB-USERNAME.github.io/miglena-chronos/ -->
+<link rel="canonical" href="https://YOUR-GITHUB-USERNAME.github.io/miglena-chronos/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Миглена Иванова — Хронос">
+<meta property="og:description" content="Морето, тишината и изкуството да живееш — във времето на един 3D часовник.">
+<meta property="og:url" content="https://YOUR-GITHUB-USERNAME.github.io/miglena-chronos/">
+<meta property="og:image" content="https://YOUR-GITHUB-USERNAME.github.io/miglena-chronos/miglena-03.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://YOUR-GITHUB-USERNAME.github.io/miglena-chronos/miglena-03.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🕰%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--s:min(60vmin,520px);--gold:#e9c98f;--gold2:#b98a46;--ink:#f6f0ea;--mute:rgba(246,240,234,.62);--glass:rgba(255,255,255,.07);--line:rgba(233,201,143,.35);--sec:#ff6b8b;--bg:#070812;--face:radial-gradient(circle at 35% 30%,rgba(255,255,255,.16),rgba(20,18,40,.55) 55%,rgba(8,8,24,.78))}
+[data-theme=light]{--gold:#9a6a26;--gold2:#6e4a14;--ink:#2a2230;--mute:rgba(42,34,48,.65);--glass:rgba(255,255,255,.55);--line:rgba(154,106,38,.4);--sec:#d6285a;--bg:#f7efe8;--face:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(255,244,236,.7) 60%,rgba(236,220,210,.8))}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Jost,system-ui,sans-serif;transition:background .6s,color .6s}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+#scene{position:fixed;inset:0;perspective:1000px;overflow:hidden}
+#world{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+#clock{position:absolute;left:50%;top:47%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);transform-style:preserve-3d;animation:float 14s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(-1.5%) rotateX(7deg) rotateY(-10deg) rotateZ(-1deg)}50%{transform:translateY(1.5%) rotateX(-6deg) rotateY(11deg) rotateZ(1deg)}}
+#clock>:not(.hand){position:absolute;inset:0;border-radius:50%;transform-style:preserve-3d}
+.back{transform:translateZ(-46px);background:conic-gradient(from 0deg,var(--gold2),var(--gold),#fff6,var(--gold2),var(--gold),var(--gold2));filter:blur(1px);box-shadow:0 0 90px 10px color-mix(in srgb,var(--gold) 38%,transparent)}
+.rim{transform:translateZ(-20px);inset:-2.2%!important;border:calc(var(--s)*.022) solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,conic-gradient(from 200deg,var(--gold),#fff9,var(--gold2),var(--gold),#fff7,var(--gold)) border-box}
+.gears{transform:translateZ(-8px);inset:6%!important;opacity:.9}
+.gears svg{position:absolute;width:100%;height:100%;fill:none;stroke:var(--line);stroke-width:.6}
+.g1{animation:spin 80s linear infinite}.g2{animation:spin 40s linear infinite reverse;width:46%!important;height:46%!important;left:52%;top:46%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.face{background:var(--face);box-shadow:inset 0 0 60px rgba(255,255,255,.08),0 0 0 1px var(--line)}
+.dial{transform:translateZ(4px)}
+.tk,.nm{position:absolute;left:50%;top:50%;transform-origin:0 0}
+.tk{width:1px;height:calc(var(--s)*.018);background:var(--mute);transform:rotate(var(--a)) translate(-50%,calc(var(--s)*-.455))}
+.tk.h{width:calc(var(--s)*.008);height:calc(var(--s)*.05);background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.nm{font:italic 600 calc(var(--s)*.065)/1 'Cormorant Garamond',serif;color:var(--ink);transform:rotate(var(--a)) translateY(calc(var(--s)*-.36)) rotate(calc(var(--a)*-1)) translate(-50%,-50%);text-shadow:0 0 14px color-mix(in srgb,var(--gold) 60%,transparent)}
+.brand{position:absolute;left:0;right:0;top:27%;bottom:auto!important;text-align:center;font:italic 400 calc(var(--s)*.05)/1.1 'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.06em;transform:translateZ(6px)}
+.brand small{display:block;font:300 calc(var(--s)*.022) Jost;letter-spacing:.32em;color:var(--mute);margin-top:.5em}
+.win{position:absolute;left:60%;top:48%;width:calc(var(--s)*.13);height:calc(var(--s)*.085);border-radius:6px!important;border:1px solid var(--line);display:grid;place-items:center;font:500 calc(var(--s)*.05) Jost;color:var(--ink);background:var(--glass);transform:translateZ(7px)}
+.hand{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:99px;transform-style:preserve-3d}
+.hh{width:calc(var(--s)*.028);height:26%;margin-left:calc(var(--s)*-.014);background:linear-gradient(var(--gold),var(--gold2));box-shadow:0 0 14px color-mix(in srgb,var(--gold) 70%,transparent);--z:14px}
+.hm{width:calc(var(--s)*.02);height:38%;margin-left:calc(var(--s)*-.01);background:linear-gradient(#fff,var(--gold));box-shadow:0 0 16px color-mix(in srgb,var(--gold) 70%,transparent);--z:22px}
+.hs{width:2px;height:43%;margin-left:-1px;background:var(--sec);box-shadow:0 0 14px var(--sec);--z:30px}
+.hs::after{content:"";position:absolute;left:-1px;top:100%;width:4px;height:16%;background:var(--sec);border-radius:99px}
+.cap{width:calc(var(--s)*.05)!important;height:calc(var(--s)*.05)!important;inset:auto!important;left:50%;top:50%;margin:calc(var(--s)*-.025) 0 0 calc(var(--s)*-.025);background:radial-gradient(circle at 35% 30%,#fff,var(--sec) 60%);transform:translateZ(38px);box-shadow:0 0 20px var(--sec)}
+.shine{transform:translateZ(44px);background:linear-gradient(125deg,rgba(255,255,255,.22),transparent 38%,transparent 62%,rgba(255,255,255,.07));pointer-events:none}
+.shot{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:3vmin;transform-style:preserve-3d;opacity:0;will-change:transform,opacity;pointer-events:none}
+.shot img{height:min(58vh,540px);width:auto;border-radius:10px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 80px color-mix(in srgb,var(--gold) 35%,transparent)}
+.shot figcaption{width:min(30vw,420px);transform:translateZ(90px);animation:drift 6s ease-in-out infinite}
+@keyframes drift{50%{transform:translateZ(90px) translateY(-14px)}}
+.shot h2{font:italic 600 clamp(24px,3.3vw,48px)/1.08 'Cormorant Garamond',serif;text-shadow:0 4px 30px rgba(0,0,0,.45);color:var(--ink)}
+.shot p{margin-top:.8em;font:300 clamp(13px,1.2vw,17px)/1.5 Jost;color:var(--mute)}
+.shot.rev{flex-direction:row-reverse;text-align:right}
+#ui{position:fixed;inset:0;pointer-events:none;z-index:5;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+#ui>*{pointer-events:auto}
+#top{display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+#top>*{pointer-events:auto}
+#name{font:italic 600 clamp(18px,2.2vw,26px) 'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.04em}
+.bar{display:flex;gap:8px;position:relative}
+.b{min-width:42px;height:42px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ink);font:500 14px Jost;cursor:pointer;display:grid;place-items:center;transition:.25s}
+.b:hover{border-color:var(--gold);box-shadow:0 0 18px color-mix(in srgb,var(--gold) 45%,transparent)}
+.b:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.b.on{background:var(--gold);color:#1a1208}
+#share{position:absolute;right:0;top:50px;display:none;flex-wrap:wrap;gap:8px;width:min(300px,86vw);justify-content:flex-end;padding:12px;border:1px solid var(--line);border-radius:18px;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#share.open{display:flex}
+#zones{position:fixed;left:50%;bottom:max(34px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:min(94vw,720px)}
+.chip{padding:8px 16px;border-radius:99px;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--mute);cursor:pointer;font:400 13px Jost;display:flex;gap:10px;align-items:baseline;transition:.25s}
+.chip b{font:500 17px Jost;color:var(--ink);font-variant-numeric:tabular-nums}
+.chip.sel{border-color:var(--gold);box-shadow:0 0 22px color-mix(in srgb,var(--gold) 40%,transparent)}
+select.chip{appearance:none;-webkit-appearance:none;padding-right:16px;color:var(--ink)}
+select option{color:#222}
+#prog{position:fixed;left:0;bottom:0;height:3px;width:100%;transform-origin:0 50%;background:linear-gradient(90deg,transparent,var(--gold),var(--sec));animation:pr 15s linear infinite}
+@keyframes pr{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#hint{position:fixed;top:68px;right:max(14px,env(safe-area-inset-right));font:italic 400 15px 'Cormorant Garamond',serif;color:var(--gold);transition:opacity .6s}
+#toast{position:fixed;left:50%;top:76px;transform:translateX(-50%);padding:8px 18px;border-radius:99px;background:var(--gold);color:#1a1208;font:500 13px Jost;opacity:0;transition:opacity .3s;pointer-events:none}
+@media(max-width:720px){:root{--s:min(86vw,52vh)}#clock{top:44%}.shot{flex-direction:column!important;text-align:center!important}.shot img{height:40vh}.shot figcaption{width:80vw}#name{max-width:42vw;line-height:1.1}#zones{gap:6px}.chip{padding:6px 11px}}
+@media(prefers-reduced-motion:reduce){#clock,.g1,.g2,.shot figcaption{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="scene"><div id="world">
+  <div id="clock" aria-label="Clock">
+    <div class="back"></div><div class="rim"></div>
+    <div class="gears"><svg class="g1" id="g1" viewBox="-50 -50 100 100"></svg><svg class="g2" id="g2" viewBox="-50 -50 100 100"></svg></div>
+    <div class="face"></div>
+    <div class="dial" id="dial"><div class="brand" id="brand"></div><div class="win" id="win"></div></div>
+    <div class="hand hh" id="hh"></div><div class="hand hm" id="hm"></div><div class="hand hs" id="hs"></div>
+    <div class="cap"></div><div class="shine"></div>
+  </div>
+</div></div>
+<div id="ui">
+  <div id="top">
+    <div id="name">Миглена Иванова</div>
+    <div class="bar">
+      <button class="b" id="bSnd" aria-label="Sound">♪</button>
+      <button class="b" id="bThm" aria-label="Theme">◐</button>
+      <button class="b" id="bLng" aria-label="Language">EN</button>
+      <button class="b" id="bShr" aria-label="Share">⤴</button>
+      <div id="share"></div>
+    </div>
+  </div>
+  <div id="hint"></div>
+  <div id="zones"></div>
+</div>
+<div id="prog"></div><div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), SEC=15000;
+const P=[
+ ['01',['Морето, тишината и изкуството да живееш','Живот, подреден около онова, което наистина има значение.'],['The sea, the silence and the art of living','A life arranged around what truly matters.']],
+ ['03',['Красота, съчетана с усмивка','Естествена красота, забелязана навсякъде.'],['Beauty, combined with a smile','Natural beauty, noticed everywhere.']],
+ ['04',['От модна писта до удоволствие за душата','Вече не е професия, а удоволствие.'],['From the runway to a pleasure for the soul','No longer a profession — a pleasure.']],
+ ['06',['Стил, който вдъхновява','Вкус, приятелство и красота — без напрежението на индустрията.'],['Style that inspires','Taste, friendship and beauty — without the pressure of the industry.']],
+ ['02',['Грация във всяко движение','Усет за линия, движение и увереност.'],['Grace in every movement','A sense of line, movement and confidence.']],
+ ['08',['Всеки миг — нова глава','Пътуванията и красивите мигове са другата ѝ голяма страст.'],['Every moment — a new chapter','Travel and beautiful moments are her other great passion.']],
+ ['05',['Красотата ѝ разказва своя история','Изяществото ѝ никога не остава незабелязано.'],['Her beauty tells its own story','Her elegance never goes unnoticed.']],
+ ['07',['Излъчване, което остава в паметта','Пилатес, реформер тренировки и дълги разходки покрай брега.'],['A presence that stays in memory','Pilates, reformer workouts and long walks along the shore.']],
+ ['09',['Красива във всеки миг','„Не бързам за никъде — просто съм тук, с морето и с хубавите неща.“'],['Beautiful in every moment','“I\'m not rushing anywhere — I\'m simply here, with the sea and the good things.”']],
+ ['10',['Светлина в погледа ѝ','Грижа за равновесието — физическо и душевно.'],['Light in her gaze','Caring for her balance — of body and soul.']],
+ ['11',['Изтънчен вкус и очарование','Живея, мечтая, обичам и се наслаждавам на живота.'],['Refined taste and charm','I live, I dream, I love — and I enjoy life.']]
+];
+const Z=[['Europe/Sofia','София','Sofia'],['Asia/Nicosia','Никозия','Nicosia'],['Europe/London','Лондон','London'],['Europe/Paris','Париж','Paris'],['Europe/Moscow','Москва','Moscow'],['Africa/Cairo','Кайро','Cairo'],['Asia/Dubai','Дубай','Dubai'],['Asia/Kolkata','Колката','Kolkata'],['Asia/Tokyo','Токио','Tokyo'],['Australia/Sydney','Сидни','Sydney'],['Pacific/Auckland','Окланд','Auckland'],['America/New_York','Ню Йорк','New York'],['America/Chicago','Чикаго','Chicago'],['America/Los_Angeles','Лос Анджелис','Los Angeles'],['America/Sao_Paulo','Сао Пауло','São Paulo']];
+const T={bg:{brand:'ХРОНОС',sub:'ВРЕМЕ · МОРЕ · ГРАЦИЯ',hint:'Натисни ♪ за музика',more:'Друга зона',copied:'Линкът е копиран',title:'Миглена Иванова — Хронос',txt:'Морето, тишината и изкуството да живееш',copy:'Копирай линка',lbl:'EN'},
+ en:{brand:'CHRONOS',sub:'TIME · SEA · GRACE',hint:'Tap ♪ for music',more:'Other zone',copied:'Link copied',title:'Miglena Ivanova — Chronos',txt:'The sea, the silence and the art of living',copy:'Copy link',lbl:'BG'}};
+const st=(k,d)=>{try{return localStorage.getItem(k)||d}catch(e){return d}}, sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let lang=st('mc-lang','bg'), zone=st('mc-zone','Europe/Sofia'), theme=st('mc-theme','dark');
+const L=()=>T[lang], li=lang=>lang==='bg'?0:1;
+
+/* ---------- clock build ---------- */
+const dial=$('#dial');
+for(let i=0;i<60;i++){const t=document.createElement('i');t.className='tk'+(i%5?'':' h');t.style.setProperty('--a',i*6+'deg');dial.appendChild(t)}
+for(let i=1;i<=12;i++){const n=document.createElement('i');n.className='nm';n.style.setProperty('--a',i*30+'deg');n.textContent=i;dial.appendChild(n)}
+function gear(el,teeth,r1,r2,spokes){let d='';for(let i=0;i<teeth*4;i++){const a=i/(teeth*4)*Math.PI*2,r=(i%4<2)?r2:r1;d+=(i?'L':'M')+(Math.cos(a)*r).toFixed(2)+' '+(Math.sin(a)*r).toFixed(2)}
+ d+='Z';let s='<path d="'+d+'"/><circle r="'+(r1*.62)+'"/><circle r="4"/>';for(let i=0;i<spokes;i++){const a=i/spokes*Math.PI*2;s+='<path d="M0 0L'+Math.cos(a)*r1*.62+' '+Math.sin(a)*r1*.62+'"/>'}el.innerHTML=s}
+gear($('#g1'),28,46,49,6);gear($('#g2'),16,46,49,5);
+const F={};
+function parts(z,d){const f=F[z]||(F[z]=new Intl.DateTimeFormat('en-GB',{timeZone:z,hourCycle:'h23',hour:'numeric',minute:'numeric',second:'numeric',day:'numeric'}));const o={};f.formatToParts(d).forEach(p=>o[p.type]=+p.value);return o}
+const zn=z=>Z.find(x=>x[0]===z)||Z[0];
+const chips=$('#zones');
+function buildZones(){chips.innerHTML='';[Z[0],Z[1]].forEach(z=>{const c=document.createElement('button');c.className='chip';c.dataset.z=z[0];c.innerHTML='<span>'+z[1+li(lang)]+'</span><b>--:--:--</b>';c.onclick=()=>setZone(z[0]);chips.appendChild(c)});
+ const s=document.createElement('select');s.className='chip';s.setAttribute('aria-label',L().more);s.innerHTML='<option value="">'+L().more+'</option>'+Z.slice(2).map(z=>'<option value="'+z[0]+'">'+z[1+li(lang)]+'</option>').join('');s.onchange=()=>s.value&&setZone(s.value);s.id='sel';chips.appendChild(s);markZone()}
+function markZone(){chips.querySelectorAll('.chip[data-z]').forEach(c=>c.classList.toggle('sel',c.dataset.z===zone));const s=$('#sel');if(s)s.classList.toggle('sel',!!Z.slice(2).find(z=>z[0]===zone));if(s)s.value=Z.slice(2).find(z=>z[0]===zone)?zone:''}
+function setZone(z){zone=z;sv('mc-zone',z);markZone();tickSnd()}
+let lastS=-1,pad2=n=>String(n).padStart(2,'0');
+function frame(){const d=new Date(),ms=d.getMilliseconds(),p=parts(zone,d),s=p.second+ms/1000,m=p.minute+s/60,h=(p.hour%12)+m/60;
+ $('#hs').style.transform='translateZ(30px) rotate('+s*6+'deg)';$('#hm').style.transform='translateZ(22px) rotate('+m*6+'deg)';$('#hh').style.transform='translateZ(14px) rotate('+h*30+'deg)';
+ if(p.second!==lastS){lastS=p.second;$('#win').textContent=p.day;chips.querySelectorAll('.chip[data-z]').forEach(c=>{const q=parts(c.dataset.z,d);c.querySelector('b').textContent=pad2(q.hour)+':'+pad2(q.minute)+':'+pad2(q.second)});tickSnd()}
+ requestAnimationFrame(frame)}
+
+/* ---------- language / theme / texts ---------- */
+function applyLang(){document.documentElement.lang=lang;const t=L();$('#brand').innerHTML=t.brand+'<small>'+t.sub+'</small>';$('#bLng').textContent=t.lbl;document.title=t.title;
+ $('#name').textContent=lang==='bg'?'Миглена Иванова':'Miglena Ivanova';$('#hint').textContent=t.hint;buildZones();buildShare();
+ document.querySelectorAll('.shot').forEach(e=>fill(e))}
+function applyTheme(){document.documentElement.dataset.theme=theme;document.querySelector('meta[name=theme-color]')||document.head.insertAdjacentHTML('beforeend','<meta name="theme-color" content="">');document.querySelector('meta[name=theme-color]').content=theme==='dark'?'#070812':'#f7efe8'}
+$('#bLng').onclick=()=>{lang=lang==='bg'?'en':'bg';sv('mc-lang',lang);applyLang()};
+$('#bThm').onclick=()=>{theme=theme==='dark'?'light':'dark';sv('mc-theme',theme);applyTheme()};
+
+/* ---------- photos flying out of the depth ---------- */
+let idx=0;const world=$('#world'),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function fill(e){const d=P[e.dataset.i][1+li(lang)];e.querySelector('h2').textContent=d[0];e.querySelector('p').textContent=d[1];e.querySelector('img').alt=T[lang].title}
+function launch(){if(document.hidden)return;const i=idx++%P.length,dir=(idx%2)?1:-1,e=document.createElement('figure');e.className='shot'+(dir>0?' rev':'');e.dataset.i=i;
+ e.innerHTML='<img src="miglena-'+P[i][0]+'.jpg" alt=""><figcaption><h2></h2><p></p></figcaption>';fill(e);world.appendChild(e);
+ const wide=innerWidth>720,x=wide?dir*innerWidth*.09:0,y=(Math.random()-.5)*innerHeight*.07,rz=(Math.random()-.5)*7,ry=-dir*16,zEnd=RM?200:930;
+ const tf=(x,z,ry,rz)=>'translate(-50%,-50%) translate3d('+x+'px,'+y+'px,'+z+'px) rotateY('+ry+'deg) rotateZ('+rz+'deg)';
+ e.animate([{transform:tf(x,-4600,ry,rz),opacity:0},{opacity:1,offset:.13},{opacity:1,offset:.72},{transform:tf(x*1.25,zEnd,ry/3,rz/2),opacity:0}],{duration:SEC+1800,easing:'cubic-bezier(.32,.12,.62,.82)',fill:'forwards'}).onfinish=()=>e.remove();
+ whoosh();const b=$('#prog');b.style.animation='none';b.offsetWidth;b.style.animation=''}
+
+/* ---------- pointer parallax ---------- */
+let tx=0,ty=0,cx=0,cy=0;
+addEventListener('pointermove',e=>{tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2});
+(function tilt(){cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;world.style.setProperty('--ry',(cx*7).toFixed(2)+'deg');world.style.setProperty('--rx',(-cy*5).toFixed(2)+'deg');requestAnimationFrame(tilt)})();
+
+/* ---------- colour space: aurora + starfield flying toward you ---------- */
+const cv=$('#bg'),g=cv.getContext('2d');let W,H,DPR=Math.min(devicePixelRatio||1,1.5);
+function rs(){W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR}addEventListener('resize',rs);rs();
+const stars=Array.from({length:170},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:Math.random()}));
+function paint(t){t/=1000;const dark=theme==='dark';g.globalCompositeOperation='source-over';g.fillStyle=dark?'#070812':'#f7efe8';g.fillRect(0,0,W,H);
+ g.globalCompositeOperation=dark?'lighter':'multiply';
+ for(let k=0;k<5;k++){const hue=(t*9+k*68+200)%360,x=W*(.5+.38*Math.sin(t*.13+k*1.7)),y=H*(.5+.34*Math.cos(t*.11+k*2.3)),r=Math.max(W,H)*(.38+.08*Math.sin(t*.2+k));
+  const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,dark?'hsla('+hue+',85%,52%,.34)':'hsla('+hue+',90%,78%,.55)');gr.addColorStop(1,'hsla('+hue+',80%,50%,0)');g.fillStyle=gr;g.fillRect(0,0,W,H)}
+ g.globalCompositeOperation='source-over';const sp=RM?.0004:.0022;
+ for(const s of stars){s.z-=sp;if(s.z<=.02){s.x=Math.random()*2-1;s.y=Math.random()*2-1;s.z=1}
+  const k=.35/s.z,px=W/2+s.x*k*W*.5,py=H/2+s.y*k*H*.5,a=Math.min(1,(1-s.z)*1.6),r=(1-s.z)*2.4*DPR;
+  g.fillStyle=dark?'rgba(255,240,215,'+a*.85+')':'rgba(120,70,60,'+a*.5+')';g.beginPath();g.arc(px,py,r,0,6.283);g.fill()}
+ requestAnimationFrame(paint)}
+
+/* ---------- audio: pad + bells + whoosh + tick (Web Audio, no files) ---------- */
+let AC,M,DL,snd=false,padT,bellT;
+const CH=[[220,261.6,329.6,392],[174.6,220,261.6,329.6],[261.6,329.6,392,493.9],[196,246.9,293.7,392]],PE=[440,523.3,587.3,659.3,784,880,1046.5];
+function aInit(){AC=new(window.AudioContext||window.webkitAudioContext)();M=AC.createGain();M.gain.value=0;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2400;M.connect(lp);lp.connect(AC.destination);
+ DL=AC.createDelay(2);DL.delayTime.value=.46;const fb=AC.createGain();fb.gain.value=.5;DL.connect(fb);fb.connect(DL);DL.connect(M)}
+let ci=0;
+function pad(){const t=AC.currentTime;CH[ci++%4].forEach((f,i)=>{[-6,6].forEach(dt=>{const o=AC.createOscillator(),v=AC.createGain();o.type=i%2?'triangle':'sine';o.frequency.value=f/(i<2?2:1);o.detune.value=dt;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.07,t+2.4);v.gain.linearRampToValueAtTime(0,t+8.6);o.connect(v);v.connect(M);o.start(t);o.stop(t+9)})})}
+function bell(){const t=AC.currentTime,f=PE[Math.random()*PE.length|0];[[1,.12],[2.76,.04]].forEach(([m,a])=>{const o=AC.createOscillator(),v=AC.createGain();o.frequency.value=f*m;v.gain.setValueAtTime(a,t);v.gain.exponentialRampToValueAtTime(.0001,t+3.2);o.connect(v);v.connect(M);v.connect(DL);o.start(t);o.stop(t+3.3)});bellT=setTimeout(bell,1100+Math.random()*1700)}
+function whoosh(){if(!snd)return;const t=AC.currentTime,n=AC.createBufferSource(),b=AC.createBuffer(1,AC.sampleRate*3,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;n.buffer=b;
+ const f=AC.createBiquadFilter(),v=AC.createGain();f.type='bandpass';f.Q.value=2.5;f.frequency.setValueAtTime(180,t);f.frequency.exponentialRampToValueAtTime(2600,t+2.8);v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.16,t+1.6);v.gain.linearRampToValueAtTime(0,t+3);n.connect(f);f.connect(v);v.connect(M);v.connect(DL);n.start(t)}
+function tickSnd(){if(!snd||lastS<0)return;const t=AC.currentTime,o=AC.createOscillator(),v=AC.createGain();o.type='square';o.frequency.value=lastS%2?2600:3100;v.gain.setValueAtTime(.012,t);v.gain.exponentialRampToValueAtTime(.0001,t+.03);o.connect(v);v.connect(M);o.start(t);o.stop(t+.04)}
+$('#bSnd').onclick=function(){$('#hint').style.opacity=0;if(!AC)aInit();snd=!snd;this.classList.toggle('on',snd);
+ if(snd){AC.resume();M.gain.cancelScheduledValues(AC.currentTime);M.gain.linearRampToValueAtTime(.55,AC.currentTime+2);pad();padT=setInterval(pad,7500);bell();whoosh()}
+ else{M.gain.cancelScheduledValues(AC.currentTime);M.gain.linearRampToValueAtTime(0,AC.currentTime+1);clearInterval(padT);clearTimeout(bellT)}};
+
+/* ---------- share ---------- */
+const url=()=>location.href.split('#')[0];
+function toast(m){const t=$('#toast');t.textContent=m;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,1800)}
+function buildShare(){const t=L(),u=encodeURIComponent(url()),x=encodeURIComponent(t.txt),i=encodeURIComponent(new URL('miglena-03.jpg',url()).href);
+ const N=[['Facebook','f','https://www.facebook.com/sharer/sharer.php?u='+u],['X','𝕏','https://twitter.com/intent/tweet?text='+x+'&url='+u],['WhatsApp','WA','https://wa.me/?text='+x+'%20'+u],['Telegram','TG','https://t.me/share/url?url='+u+'&text='+x],['LinkedIn','in','https://www.linkedin.com/sharing/share-offsite/?url='+u],['Viber','Vb','viber://forward?text='+x+'%20'+u],['Pinterest','P','https://pinterest.com/pin/create/button/?url='+u+'&media='+i+'&description='+x]];
+ const s=$('#share');s.innerHTML='';N.forEach(n=>{const a=document.createElement('a');a.className='b';a.href=n[2];a.target='_blank';a.rel='noopener';a.title=n[0];a.setAttribute('aria-label',n[0]);a.textContent=n[1];a.style.textDecoration='none';s.appendChild(a)});
+ const c=document.createElement('button');c.className='b';c.textContent='🔗 '+t.copy;c.onclick=async()=>{try{await navigator.clipboard.writeText(url())}catch(e){prompt(t.copy,url())}toast(t.copied)};s.appendChild(c)}
+$('#bShr').onclick=()=>$('#share').classList.toggle('open');
+addEventListener('keydown',e=>e.key==='Escape'&&$('#share').classList.remove('open'));
+
+applyTheme();applyLang();requestAnimationFrame(frame);requestAnimationFrame(paint);
+launch();setInterval(launch,SEC);
+setTimeout(()=>{if(!snd)$('#hint').style.opacity=0},12000);
+</script>
+</body>
+</html>
